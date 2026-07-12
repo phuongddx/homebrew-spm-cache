@@ -20,16 +20,17 @@ class SpmCache < Formula
     ENV["GEM_HOME"] = libexec/"gems"
     ENV["GEM_PATH"] = libexec/"gems"
 
-    # Use the gemspec to resolve and install all runtime dependencies
+    # Install gem and all runtime dependencies into Homebrew's isolated gem dir
     cd libexec do
       system "gem", "build", "spm_cache.gemspec"
-      system "gem", "install", "--no-document", "--local", "spm-cache-#{version}.gem",
+      system "gem", "install", "--no-document", "spm-cache-#{version}.gem",
              "--install-dir", libexec/"gems"
     end
 
     # Build the Swift proxy tool in release mode
+    # SPM's sandbox-exec conflicts with Homebrew's sandbox, so disable SPM sandbox
     cd libexec/"tools/spm-cache-proxy" do
-      system "swift", "build", "-c", "release"
+      system "swift", "build", "-c", "release", "--disable-sandbox"
     end
 
     # Install the CLI executable as a shim that sets up the Ruby environment
