@@ -38,13 +38,15 @@ class SpmCache < Formula
     rm_r(proxy_dir/".build/plugins") if (proxy_dir/".build/plugins").exist?
     rm_r(proxy_dir/".build/debug") if (proxy_dir/".build/debug").exist?
 
-    # Install the CLI executable as a shim that sets up the Ruby environment
-    env = {
-      GEM_HOME:       libexec/"gems",
-      GEM_PATH:       libexec/"gems",
-      SPM_CACHE_ROOT: libexec.to_s,
-    }
-    (bin/"spm-cache").write_env_script(libexec/"bin/spm-cache", env)
+    # Install the CLI executable as a wrapper that sets up the Ruby environment
+    # Custom wrapper (instead of write_env_script) to suppress Homebrew Ruby's nkf warnings
+    (bin/"spm-cache").write <<~SH
+      #!/bin/bash
+      export GEM_HOME="#{libexec/"gems"}"
+      export GEM_PATH="#{libexec/"gems"}"
+      export SPM_CACHE_ROOT="#{libexec}"
+      exec "#{libexec/"bin/spm-cache"}" "$@" 2> >(grep -v "^Ignoring nkf" >&2)
+    SH
   end
 
   def caveats
