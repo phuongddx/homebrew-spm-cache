@@ -29,9 +29,14 @@ class SpmCache < Formula
 
     # Build the Swift proxy tool in release mode
     # SPM's sandbox-exec conflicts with Homebrew's sandbox, so disable SPM sandbox
-    cd libexec/"tools/spm-cache-proxy" do
+    proxy_dir = libexec/"tools/spm-cache-proxy"
+    cd proxy_dir do
       system "swift", "build", "-c", "release", "--disable-sandbox"
     end
+
+    # Remove build artifacts that reference Homebrew internals (keep only the release binary)
+    rm_r(proxy_dir/".build/plugins") if (proxy_dir/".build/plugins").exist?
+    rm_r(proxy_dir/".build/debug") if (proxy_dir/".build/debug").exist?
 
     # Install the CLI executable as a shim that sets up the Ruby environment
     env = {
