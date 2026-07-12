@@ -6,8 +6,8 @@ class SpmCache < Formula
   license "MIT"
   head "https://github.com/phuongddx/spm-cache.git", branch: "main"
 
-  depends_on "ruby@3.3"
   depends_on :macos
+  depends_on "ruby@3.3"
 
   uses_from_macos "swift"
 
@@ -33,11 +33,12 @@ class SpmCache < Formula
     end
 
     # Install the CLI executable as a shim that sets up the Ruby environment
-    (bin/"spm-cache").write_env_script(libexec/"bin/spm-cache",
-      GEM_HOME: libexec/"gems",
-      GEM_PATH: libexec/"gems",
-      SPM_CACHE_ROOT: libexec.to_s
-    )
+    env = {
+      GEM_HOME:       libexec/"gems",
+      GEM_PATH:       libexec/"gems",
+      SPM_CACHE_ROOT: libexec.to_s,
+    }
+    (bin/"spm-cache").write_env_script(libexec/"bin/spm-cache", env)
   end
 
   def caveats
