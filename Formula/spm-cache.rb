@@ -1,8 +1,8 @@
 class SpmCache < Formula
   desc "Cache SPM dependencies as xcframeworks to reduce Xcode build times"
   homepage "https://github.com/phuongddx/spm-cache"
-  url "https://github.com/phuongddx/spm-cache/archive/refs/tags/v0.2.4.tar.gz"
-  sha256 "b14feaf641c9848750261afe4c0e90d08695dde1a9ff18e58a2ec7ba109f0c39"
+  url "https://github.com/phuongddx/spm-cache/archive/refs/tags/v0.2.5.tar.gz"
+  sha256 "97ecaf10fca6beea39ffda6d7ab671fc502525ccdeac3578573c84dc4ae266f0"
   license "MIT"
   head "https://github.com/phuongddx/spm-cache.git", branch: "main"
 
